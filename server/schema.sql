@@ -4,18 +4,18 @@ CREATE DATABASE chat;
 USE chat;
 
 CREATE TABLE users (
-  user_id INT PRIMARY KEY,
+  user_id INT(0) AUTO_INCREMENT PRIMARY KEY,
   username TEXT
 );
 
 CREATE TABLE rooms (
-  room_id INT PRIMARY KEY,
+  room_id INT(0) AUTO_INCREMENT PRIMARY KEY,
   roomname TEXT
 );
 
 CREATE TABLE messages (
   /* Describe your table here.*/
-  id INT PRIMARY KEY,
+  id INT(0) AUTO_INCREMENT PRIMARY KEY,
   message_text TEXT,
   user_id INT,
   room_id INT,
