@@ -1,24 +1,34 @@
 var db = require('../db');
+// var Sequelize = require('sequelize');
+// var db = new Sequelize('chat', 'root', 'students');
 
 module.exports = {
   getAll: function (callback) {
-    var query = 'SELECT * FROM users';
-    db.dbConnection.query(query, (err, results) => {
-      if (err) {
-        console.log(err);
-      } else {
-        callback(err, results);
-      }
-    });
+    db.users.sync().then(db.users.findAll())
+      .then((results) => callback(null, JSON.stringify(results)))
+      .catch((err) => callback(err));
+
+    // var query = 'SELECT * FROM users';
+    // db.dbConnection.query(query, (err, results) => {
+    //   if (err) {
+    //     console.log(err);
+    //   } else {
+    //     callback(err, results);
+    //   }
+    // });
   },
   create: function (username, callback) {
-    var query = 'INSERT INTO users (user_name) VALUES (?)';
-    db.dbConnection.query(query, username, (err, results) => {
-      if (err) {
-        console.log(err);
-      } else {
-        callback(err, results);
-      }
-    });
+    console.log('logging username:', username);
+    db.users.sync().then(db.users.create({userName: username}))
+      .then((user) => callback(null, JSON.stringify(user)))
+      .catch((err) => callback(err));
+    // var query = 'INSERT INTO users (userName) VALUES (?)';
+    // db.dbConnection.query(query, username, (err, results) => {
+    //   if (err) {
+    //     console.log(err);
+    //   } else {
+    //     callback(err, results);
+    //   }
+    // });
   }
 };

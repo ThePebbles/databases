@@ -54,7 +54,7 @@ describe('Persistent Node Chat Server', () => {
           expect(results.length).toEqual(1);
 
           // TODO: If you don't have a column named text, change this test.
-          expect(results[0].message_text).toEqual(message);
+          expect(results[0].messageText).toEqual(message);
           done();
         });
       })
@@ -81,8 +81,8 @@ describe('Persistent Node Chat Server', () => {
       axios.get(`${API_URL}/messages`)
         .then((response) => {
           const messageLog = response.data;
-          expect(messageLog[0].message_text).toEqual(message);
-          expect(messageLog[0].room_name).toEqual(roomname);
+          expect(messageLog[0].messageText).toEqual(message);
+          expect(messageLog[0].roomName).toEqual(roomname);
           done();
         })
         .catch((err) => {
@@ -114,13 +114,13 @@ describe('Persistent Node Chat Server', () => {
             throw err;
           }
           expect(results.length).toEqual(2);
-          expect(results[1].message_text).toEqual(message);
+          expect(results[1].messageText).toEqual(message);
           axios.get(`${API_URL}/messages`)
             .then((response) => {
               const messageLog = response.data;
               console.log(messageLog);
-              expect(messageLog[1].message_text).toEqual(message);
-              expect(messageLog[1].room_name).toEqual(roomname);
+              expect(messageLog[1].messageText).toEqual(message);
+              expect(messageLog[1].roomName).toEqual(roomname);
               done();
             });
           done();
