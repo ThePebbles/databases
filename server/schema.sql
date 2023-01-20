@@ -4,7 +4,7 @@ CREATE DATABASE chat;
 USE chat;
 
 CREATE TABLE users (
-  userId INT(0) AUTO_INCREMENT PRIMARY KEY,
+  id INT(0) AUTO_INCREMENT PRIMARY KEY,
   userName TEXT
 );
 
@@ -14,7 +14,7 @@ CREATE TABLE messages (
   messageText TEXT,
   userId INT,
   roomName TEXT,
-  FOREIGN KEY (userId) REFERENCES users(userId)
+  FOREIGN KEY (userId) REFERENCES users(id)
 );
 
 -- CREATE TABLE Orders (

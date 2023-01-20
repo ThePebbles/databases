@@ -80,7 +80,7 @@ describe('Persistent Node Chat Server', () => {
       // Now query the Node chat server and see if it returns the message we just inserted:
       axios.get(`${API_URL}/messages`)
         .then((response) => {
-          const messageLog = response.data;
+          const messageLog = JSON.parse(response.data);
           expect(messageLog[0].messageText).toEqual(message);
           expect(messageLog[0].roomName).toEqual(roomname);
           done();

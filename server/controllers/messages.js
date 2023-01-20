@@ -37,9 +37,9 @@ module.exports = {
     //       });
     //   });
     // console.log(req.body);
-    var userName = req.body.username;
-    var messageText = req.body.message;
-    var roomName = req.body.roomname;
+    var username = req.body.username;
+    var message = req.body.message;
+    var roomname = req.body.roomname;
     models.messages.create(username, message, roomname, (err, results) => {
       if (err) {
         res.sendStatus(500);

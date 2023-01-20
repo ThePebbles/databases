@@ -13,6 +13,7 @@ var Sequelize = require('sequelize');
 var db = new Sequelize('chat', 'root', 'students', {
   host: 'localhost',
   dialect: 'mysql',
+  define: {timestamps: false}
 });
 db.authenticate().then(() => {
   console.log('Connection has been established successfully.');
@@ -43,7 +44,9 @@ var messages = db.define('messages', {
   roomName: Sequelize.STRING
 });
 
-users.hasMany(messages);
+users.hasMany(messages, {
+  foreignKey: 'userId'
+});
 messages.belongsTo(users);
 
 users.sync();
@@ -56,6 +59,8 @@ messages.sync();
 
 exports.users = users;
 exports.messages = messages;
+
+// Sequelize db:migrate
 
 // module.exports = {
 //   dbConnection: mysql.createConnection({
