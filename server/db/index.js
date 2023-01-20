@@ -10,11 +10,11 @@ var mysql = require('mysql2');
 // user: 'root', password: 'some_password_you_created_at_install'
 module.exports = {
   dbConnection: mysql.createConnection({
-    user: 'sarahkwando',
-    password: 'student', //insert my password here
+    user: 'root',
+    password: 'students', //insert my password here
     database: 'chat',
-  });
-}
+  })
+};
 
 
 

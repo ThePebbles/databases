@@ -1,30 +1,48 @@
 var db = require('../db');
 
 module.exports = {
-  getAll: function () {
-    var allMessage = db.query('SELECT * FROM messages;');
-    // console.log(allMessage);
-    // return allMessage;
-  }, // a function which produces all the messages
-  create: function (username, text, roomname) {
-
-    // const username = 'Valjean';
-    // const message = 'In mercy\'s name, three days is all I need.';
-    // const roomname = 'Hello';
-    var name_id;
-    var roomName_id;
-    db.query('SELECT user_id from users WHERE username = ' + username + ');', (err, results) => {
+  getAll: function (callback) {
+    var query = 'SELECT * FROM messages;'; // {username, message_text, roomname}
+    db.dbConnection.query(query, (err, results) => {
       if (err) {
         console.log(err);
       } else {
-        name_id = results;
-        //db.query(INSERT statement)
+        callback(err, results);
       }
-    })
-    //INSERT INTO table_name VALUES (id, message_text, user_id, room_id);
-    db.query('INSERT INTO messages VALUES (' + id ', ' + name_id + ', ' + text +  ', ' + roomName_id + ');', (err, results) => {
-      if (er)
     });
+  }, // a function which produces all the messages
+  // req.body
+  create: function (username, text, roomname, callback) {
+    // var query = 'INSERT INTO users (user_name) VALUES (?)';
+    // db.dbConnection.query(query, username, (err, results) => {
+    //   if (err) {
+    //     console.log(err);
+    //   } else {
+    //     callback(err, results);
+    //   }
+    // });
+    console.log('TEXT: ', text);
+    //console.log('username', username);
+    var userId = [username];
+
+    // var query = 'INSERT INTO users (user_name) VALUES (?)';
+    var query1 = 'SELECT user_id from users WHERE user_name = (?)';
+    var query2 = 'INSERT INTO messages (message_text, user_id, room_name) VALUES (?, ?, ?)';
+    db.dbConnection.query(query1, userId, (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        var params = [text, results[0].user_id, roomname];
+        db.dbConnection.query(query2, params, (err, results) => {
+          if (err) {
+            console.log(err);
+          } else {
+            callback(null, results);
+          }
+        });
+      }
+    });
+    //INSERT INTO table_name VALUES (id, message_text, user_id, room_id);
 
     //get name_id, then get room id, then create message
     //add user name to users table or reference already existing user

@@ -8,15 +8,15 @@ const API_URL = 'http://127.0.0.1:3000/classes';
 
 describe('Persistent Node Chat Server', () => {
   const dbConnection = mysql.createConnection({
-    user: 'student',
-    password: 'student',
+    user: 'root',
+    password: 'students',
     database: 'chat',
   });
 
   beforeAll((done) => {
     dbConnection.connect();
 
-       const tablename = 'messages'; // TODO: fill this out
+    const tablename = 'messages'; // TODO: fill this out
 
     /* Empty the db table before all tests so that multiple tests
      * (or repeated runs of the tests)  will not fail when they should be passing
@@ -65,8 +65,11 @@ describe('Persistent Node Chat Server', () => {
 
   it('Should output all messages from the DB', (done) => {
     // Let's insert a message into the db
-       const queryString = 'SELECT * FROM messages';
-       const queryArgs = [];
+    const username = 'Valjean';
+    const message = 'In mercy\'s name, three days is all I need.';
+    const roomname = 'Hello';
+    const queryString = 'SELECT * FROM messages';
+    const queryArgs = [];
     /* TODO: The exact query string and query args to use here
      * depend on the schema you design, so I'll leave them up to you. */
     dbConnection.query(queryString, queryArgs, (err) => {
@@ -78,8 +81,8 @@ describe('Persistent Node Chat Server', () => {
       axios.get(`${API_URL}/messages`)
         .then((response) => {
           const messageLog = response.data;
-          expect(messageLog[0].text).toEqual(message);
-          expect(messageLog[0].roomname).toEqual(roomname);
+          expect(messageLog[0].message_text).toEqual(message);
+          expect(messageLog[0].room_name).toEqual(roomname);
           done();
         })
         .catch((err) => {
@@ -87,4 +90,63 @@ describe('Persistent Node Chat Server', () => {
         });
     });
   });
+
+  //adding a second message
+  it('Should output second message from the DB', (done) => {
+    // Let's insert a message into the db
+    const username = 'Alvin';
+    const message = 'Coo Coo for Cocoa Puffs';
+    const roomname = 'Chocolate Land';
+    const queryString = 'SELECT * FROM messages';
+    const queryArgs = [];
+    /* TODO: The exact query string and query args to use here
+     * depend on the schema you design, so I'll leave them up to you. */
+
+    axios.post(`${API_URL}/users`, { username })
+      .then(() => {
+        return axios.post(`${API_URL}/messages`, { username, message, roomname });
+      })
+      .then(() => {
+        const queryString = 'SELECT * FROM messages';
+        const queryArgs = [];
+        dbConnection.query(queryString, queryArgs, (err, results) => {
+          if (err) {
+            throw err;
+          }
+          expect(results.length).toEqual(2);
+          expect(results[1].message_text).toEqual(message);
+          axios.get(`${API_URL}/messages`)
+            .then((response) => {
+              const messageLog = response.data;
+              console.log(messageLog);
+              expect(messageLog[1].message_text).toEqual(message);
+              expect(messageLog[1].room_name).toEqual(roomname);
+              done();
+            });
+          done();
+        });
+      })
+      .catch((err) => {
+        throw err;
+      });
+    // Now query the Node chat server and see if it returns the message we just inserted:
+    // dbConnection.query(queryString, queryArgs, (err) => {
+    //   if (err) {
+    //     throw err;
+    //   }
+    // axios.get(`${API_URL}/messages`)
+    //   .then((response) => {
+    //     const messageLog = response.data;
+    //     console.log(messageLog);
+    //     expect(messageLog[1].message_text).toEqual(message);
+    //     expect(messageLog[1].room_name).toEqual(roomname);
+    //     done();
+    //   })
+    //     .catch((err) => {
+    //       throw err;
+    //     });
+    // });
+  });
 });
+
+

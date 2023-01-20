@@ -5,12 +5,7 @@ USE chat;
 
 CREATE TABLE users (
   user_id INT(0) AUTO_INCREMENT PRIMARY KEY,
-  username TEXT
-);
-
-CREATE TABLE rooms (
-  room_id INT(0) AUTO_INCREMENT PRIMARY KEY,
-  roomname TEXT
+  user_name TEXT
 );
 
 CREATE TABLE messages (
@@ -18,9 +13,8 @@ CREATE TABLE messages (
   id INT(0) AUTO_INCREMENT PRIMARY KEY,
   message_text TEXT,
   user_id INT,
-  room_id INT,
-  FOREIGN KEY (user_id) REFERENCES users(user_id),
-  FOREIGN KEY (room_id) REFERENCES rooms(room_id)
+  room_name TEXT,
+  FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 -- CREATE TABLE Orders (
