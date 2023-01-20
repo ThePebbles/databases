@@ -1,6 +1,4 @@
 var db = require('../db');
-// var Sequelize = require('sequelize');
-// var db = new Sequelize('chat', 'root', 'students');
 
 module.exports = {
   getAll: function (callback) {

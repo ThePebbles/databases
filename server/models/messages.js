@@ -1,6 +1,5 @@
 var db = require('../db');
-// var Sequelize = require('sequelize');
-// var db = new Sequelize('chat', 'root', 'students');
+
 var counter = 0;
 
 module.exports = {
@@ -16,34 +15,14 @@ module.exports = {
     db.messages.findAll()
       .then((results) => callback(null, JSON.stringify(results)))
       .catch((err) => callback(err));
-    // db.messages.sync()
-    //   .then(() => {
-    //     return db.messages.findAll();
-    //   })
-    //   .then((results) => callback(null, results))
-    //   .catch((err) => callback(err));
   },
 
   create: function (userName, messageText, roomName, callback) {
-    //User.create({username: 'Jean Valjean'}
-    // db.users.find({ where: {username: username}})
-    //   .then(() => {
-    //     return username.id;
-    //   });
-    // db.messages.create();
-    console.log('USERNAME', userName);
-    // creating
-    // const records = await sequelize.query('select 1 as `foo.bar.baz`', {
-    //   nest: true,
-    //   type: QueryTypes.SELECT
-    // });
+
     db.users.findOrCreate({where: {'userName': userName}, attributes: ['id']})
-      // create does not return anything, we have to get userName's id
-      //.then(db.users.findByPk(userName))
+
       .then((user) => {
-        //console.log('THIS IS ERROR: ', err);
-        console.log('THIS IS USER: ', user); // <= was an object, But i'm getting Alvin
-        console.log('THIS IS USER ID: ', user[0].dataValues.id);
+
         var params = {
           userId: user[0].dataValues.id,
           messageText: messageText,

@@ -117,7 +117,7 @@ describe('Persistent Node Chat Server', () => {
           expect(results[1].messageText).toEqual(message);
           axios.get(`${API_URL}/messages`)
             .then((response) => {
-              const messageLog = response.data;
+              const messageLog = JSON.parse(response.data);
               console.log(messageLog);
               expect(messageLog[1].messageText).toEqual(message);
               expect(messageLog[1].roomName).toEqual(roomname);
@@ -129,24 +129,74 @@ describe('Persistent Node Chat Server', () => {
       .catch((err) => {
         throw err;
       });
-    // Now query the Node chat server and see if it returns the message we just inserted:
-    // dbConnection.query(queryString, queryArgs, (err) => {
-    //   if (err) {
-    //     throw err;
-    //   }
-    // axios.get(`${API_URL}/messages`)
-    //   .then((response) => {
-    //     const messageLog = response.data;
-    //     console.log(messageLog);
-    //     expect(messageLog[1].message_text).toEqual(message);
-    //     expect(messageLog[1].room_name).toEqual(roomname);
-    //     done();
-    //   })
-    //     .catch((err) => {
-    //       throw err;
-    //     });
-    // });
+  });
+  it('Should keep userID same for same user', (done) => {
+    const username = 'Alvin';
+    const message = 'Hello Chocolate!';
+    const roomname = 'Chocolate Land';
+    const queryString = 'SELECT * FROM messages';
+    const queryArgs = [];
+
+    axios.post(`${API_URL}/users`, { username })
+      .then(() => {
+        return axios.post(`${API_URL}/messages`, { username, message, roomname });
+      })
+      .then(() => {
+        const queryString = 'SELECT * FROM messages';
+        const queryArgs = [];
+        dbConnection.query(queryString, queryArgs, (err, results) => {
+          if (err) {
+            throw err;
+          }
+          expect(results.length).toEqual(3);
+          expect(results[2].messageText).toEqual(message);
+          axios.get(`${API_URL}/messages`)
+            .then((response) => {
+              const messageLog = JSON.parse(response.data);
+              console.log(messageLog);
+              expect(messageLog[2].userId).toEqual(2);
+              done();
+            });
+          done();
+        });
+      })
+      .catch((err) => {
+        throw err;
+      });
+  });
+  it('Should update messa', (done) => {
+
+    const username = 'Sarah';
+    const message = 'They\'re after me lucky charms!';
+    const roomname = 'Cereal World';
+    const queryString = 'SELECT * FROM messages';
+    const queryArgs = [];
+
+    axios.post(`${API_URL}/users`, { username })
+      .then(() => {
+        return axios.post(`${API_URL}/messages`, { username, message, roomname });
+      })
+      .then(() => {
+        const queryString = 'SELECT * FROM messages';
+        const queryArgs = [];
+        dbConnection.query(queryString, queryArgs, (err, results) => {
+          if (err) {
+            throw err;
+          }
+          expect(results.length).toEqual(4);
+          expect(results[3].messageText).toEqual(message);
+          axios.get(`${API_URL}/messages`)
+            .then((response) => {
+              const messageLog = JSON.parse(response.data);
+              console.log(messageLog);
+              expect(messageLog[3].userId).toEqual(3);
+              done();
+            });
+          done();
+        });
+      })
+      .catch((err) => {
+        throw err;
+      });
   });
 });
-
-
